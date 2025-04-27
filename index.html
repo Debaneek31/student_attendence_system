@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance System</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('college.jpg') no-repeat center center fixed;
+            background-size: cover;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            color: white;
+        }
+        .container {
+            max-width: 700px;
+            margin: 100px auto;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+        .college-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #f8f9fa;
+        }
+        .login-options {
+            margin: 20px 0;
+        }
+        .btn {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            margin: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .attendance-report {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 5px;
+            color: black;
+        }
+        .chart-container {
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            color: black;
+        }
+        .about, .contact {
+            max-width: 700px;
+            margin: 50px auto;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            text-align: left;
+        }
+        .about h2, .contact h2 {
+            color: #f8f9fa;
+        }
+        .about p, .contact p {
+            color: white;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="college-name">Einstein Academy of Technology and Management</div>
+        <h1>Student Attendance System</h1>
+        
+        <div class="login-options">
+            <a href="student_login.html" class="btn">Student Login</a>
+            <a href="admin_login.html" class="btn">Admin Login</a>
+        </div>
+        
+        <div class="attendance-report">
+            <h2>Year-wise Attendance Report</h2>
+            <div class="chart-container">
+                <canvas id="attendanceChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <div class="about">
+        <h2>About Us</h2>
+        <p>Welcome to the Einstein Academy of Technology and Management's Attendance System. Our goal is to provide an efficient and automated way to track student attendance using RFID technology.</p>
+    </div>
+    
+    <div class="contact">
+        <h2>Contact Us</h2>
+        <p><strong>Email:</strong> info@eatm.in</p>
+        <p><strong>Phone:</strong> 06755243621</p>
+        <p><strong>Address:</strong>At-Baniatangi, Bhubaneswar, P.O-Bajapur, Dist:khurda, Odisha, Pin - 752060</p>
+    </div>
+
+    <script>
+        fetch('fetch_attendance.php')
+            .then(response => response.json())
+            .then(data => {
+                const years = data.map(item => item.year);
+                const percentages = data.map(item => item.attendance_percentage);
+    
+                const ctx = document.getElementById('attendanceChart').getContext('2d');
+                const attendanceChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: years,
+                        datasets: [{
+                            label: 'Attendance %',
+                            data: percentages,
+                            backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
+    
+</body>
+</html>
